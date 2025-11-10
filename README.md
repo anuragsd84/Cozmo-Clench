@@ -1,8 +1,7 @@
-# Cozmo-Clench
-Cozmo Clench – RC Controlled Robot
+Cozmo-Clench – RC Controlled Robot
 
 A high-power RC-controlled robot built using 4 Johnson motors, an L298N motor driver, and a dual-claw mechanism.
-The robot is controlled through PWM signals from an EPW6 receiver + Radiomaster transmitter, supporting:
+The robot is controlled using PWM signals from an EPW6 receiver + Radiomaster transmitter, supporting:
 
 Differential drive
 
@@ -20,30 +19,35 @@ This repository contains the Arduino firmware that powers the complete system.
 
 4× Johnson Motors
 
-2 for drive
+2 × Drive motors
 
-2 for claw actuation
+2 × Claw motors
 
-L298N Motor Driver (dual H-bridge)
+L298N Motor Driver (Dual H-Bridge)
 
-Radiomaster Controller
+Radiomaster Transmitter
 
-EPW6 / any PWM RC Receiver
+EPW6 / Any PWM RC Receiver
 
 Arduino UNO / Nano
 
 3S 2200mAh Li-Po Battery
 
-Jumper wires, chassis, connectors, etc.
+Chassis, wiring, connectors, etc.
+
 
 ✅ Receiver → Arduino Pin Mapping
-RC Channel	Arduino Pin	Purpose
-Throttle	D3	Forward / Backward
-Direction	D6	Left / Right steering
-Claw Motor 1	D9	Open / Close Claw 1
-Claw Motor 2	D11	Open / Close Claw 2
+
+RC Channel	Arduino Pin	        Purpose
+Throttle	    D3	        Forward / Backward
+Direction 	  D6	        Left / Right steering
+Claw Motor1 	D9	        Open / Close Claw 1
+Claw Motor2	  D11	        Open / Close Claw 2
+
 ✅ Motor Driver Pin Mapping
+
 Drive Motors (L298N)
+
 Function	Arduino Pin
 IN1 — Left Forward	A1
 IN2 — Left Reverse	A2
@@ -53,37 +57,40 @@ IN4 — Right Reverse	A4
 ENB — Right PWM	5
 Claw Motors
 Claw Motor	Forward Pin	Reverse Pin
-Claw 1	2	4
-Claw 2	7	8
+Claw 1	        2	        4
+Claw 2	        7       	8
+
 ✅ Features
 
-✅ Differential drive with smooth steering
+✅ Smooth differential drive
 
-✅ Full RC PWM decoding via pulseIn()
+✅ Full RC PWM decoding using pulseIn()
 
-✅ Robust failsafe if signal is out of valid range
+✅ Failsafe: invalid PWM defaults to 1500 µs
 
 ✅ Dead-zone filtering to prevent jitter
 
-✅ Two fully independent claw motors
+✅ Dual independent claw motors
 
-✅ 1000–2000 µs mapped to −255 → +255 speed
+✅ 1000–2000 µs mapped to −255 → +255 motor PWM
 
-✅ 20 ms loop for stable operation
+✅ Stable 20 ms loop timing
 
 ✅ RC Signal Processing
+
 ✅ 1. Pulse Reading
 
-Each input is read using:
+Each RC channel is read using:
 
 pulseIn(pin, HIGH);
 
 
-Invalid pulses (<900 or >2100) → replaced with 1500 µs (neutral).
+Invalid signals (<900 or >2100) are replaced with 1500 µs (neutral).
+
 
 ✅ 2. Mapping to Motor Speed
 
-Throttle & direction stick positions → mapped to speed:
+Throttle and direction values are converted to speed:
 
 map(pulse, 1000, 2000, -255, 255);
 
@@ -92,31 +99,31 @@ left_speed  = throttle + direction;
 right_speed = throttle - direction;
 
 
-Speeds are then constrained to −255..255.
+Values are constrained to −255…255.
 
-✅ 4. Claw Motor Logic
+✅ 4. Claw Motor Control
 
-Threshold-based simple control:
+Simple threshold-based logic:
 
 > 1800 µs → Forward
 
 < 1200 µs → Reverse
 
-Else → Stop
+Otherwise → Stop
 
 ✅ How To Use
 
-Wire the receiver to pins 3, 6, 9, 11.
+Connect all RC channels to pins 3, 6, 9, 11.
 
-Connect drive motors and claw motors to L298N as per tables above.
+Connect motors & L298N exactly as per pin tables above.
 
-Power L298N with 3S Li-Po (12.6V).
+Power the L298N with a 3S Li-Po (12.6V).
 
-Power Arduino using stable 5V regulator.
+Power the Arduino using a stable 5V regulator.
 
-Upload the Arduino firmware (clench_robot.ino).
+Upload the firmware: clench_robot.ino.
 
-Power ON transmitter → power ON robot.
+Turn ON the RC transmitter → power the robot.
 
 Controls:
 
@@ -124,21 +131,20 @@ Right stick up/down → forward/back
 
 Right stick left/right → turning
 
-AUX switches → control claws (open/close)
+AUX channels → claw opening/closing
+
 
 ✅ Safety Notes
 
-Ensure common ground between receiver, Arduino, and drivers.
+Use common GND for Arduino, receiver, and L298N.
 
-Do not power Arduino directly from Li-Po.
+Never power Arduino directly from the Li-Po.
 
-Lift wheels during your first test.
+Test with wheels lifted before first run.
 
-L298N may heat at high loads → add heatsinks if needed.
+L298N may heat under load → heatsink recommended.
 
-
-
- **Author**
+Author
 
 Anurag Deshmukh
 Embedded Systems • Robotics • Automation
