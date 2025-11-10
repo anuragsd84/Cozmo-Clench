@@ -36,4 +36,3 @@ Arduino UNO / Nano
 Chassis, wiring, connectors, etc.
 
 
-• Automation
